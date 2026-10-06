@@ -5,7 +5,7 @@ import { createServer } from 'vite';
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 
-const server = await createServer({ server: { port: 5200 + Math.floor(Math.random() * 700), host: '127.0.0.1' }, logLevel: 'error' });
+const server = await createServer({ server: { port: 5200 + Math.floor(Math.random() * 700), host: '127.0.0.1', hmr: false, watch: null }, logLevel: 'error' });
 await server.listen();
 const base = server.resolvedUrls.local[0];
 mkdirSync('test-results', { recursive: true });

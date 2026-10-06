@@ -81,11 +81,13 @@ export class Player {
   }
 
   setMount(kind) {
+    if ((this.mount?.kind ?? null) === (kind || null) && (kind ? this.mount : true)) return;
     if (this.mount) { this.object3d.remove(this.mount.object3d); this.mount.dispose?.(); this.mount = null; }
     this.art.object3d.position.set(0, 0, 0);
     if (!kind) return;
     this.mount = createMount(kind);
     if (!this.mount) return;
+    this.mount.kind = kind;
     this.object3d.add(this.mount.object3d);
     const seat = this.mount.seat;
     if (seat) {

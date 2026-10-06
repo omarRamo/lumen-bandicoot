@@ -88,8 +88,8 @@ export class Level {
       this.addEntity({ type: 'pickup', kind: 'goal', x: data.goal[0], y: data.goal[1], z: data.goal[2], id: 'goal' });
     }
 
-    this.applyMode();
     this.player.spawn(data.spawn);
+    this.applyMode();
     shared.rig.snap(this.player);
     bus.emit('hud:crates', { broken: 0, total: this.stats.cratesTotal });
     bus.emit('hud:lights', { value: g.lights });

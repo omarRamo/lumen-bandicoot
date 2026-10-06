@@ -1,7 +1,7 @@
 // Dev tool: node tools/trace.mjs <levelId> [screenshot.png] — runs forward 2.4 s, prints player/camera trace.
 import { createServer } from 'vite';
 import { chromium } from 'playwright';
-const server = await createServer({ root: process.cwd(), server: { port: 5200 + Math.floor(Math.random() * 700), host: '127.0.0.1' }, logLevel: 'error' });
+const server = await createServer({ root: process.cwd(), server: { port: 5200 + Math.floor(Math.random() * 700), host: '127.0.0.1', hmr: false, watch: null }, logLevel: 'error' });
 await server.listen();
 const base = server.resolvedUrls.local[0];
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
