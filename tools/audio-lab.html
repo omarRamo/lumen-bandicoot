@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lumen Bandicoot — Audio Lab</title>
+<style>
+  body { margin: 0; padding: 16px; background: #1c1640; color: #fff7dc; font: 14px system-ui, sans-serif; }
+  h1 { font-size: 20px; margin: 0 0 8px; } h2 { font-size: 15px; margin: 18px 0 6px; color: #ffd76a; }
+  .grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  button { background: #2e2563; color: #fff7dc; border: 1px solid #5a4fa8; border-radius: 6px; padding: 6px 10px; cursor: pointer; font: inherit; }
+  button.on { background: #e98c73; color: #1c1640; }
+  label { margin-right: 14px; } #state { font: 12px monospace; opacity: .8; white-space: pre; }
+</style>
+</head>
+<body>
+<h1>Lumen Bandicoot — Audio Lab</h1>
+<div>Clique n'importe où pour débloquer l'audio. <span id="state"></span></div>
+<div>
+  <label>Musique <input id="mv" type="range" min="0" max="1" step="0.05" value="0.7"></label>
+  <label>SFX <input id="sv" type="range" min="0" max="1" step="0.05" value="0.9"></label>
+</div>
+<h2>Modificateurs</h2><div class="grid" id="mods"></div>
+<h2>Pistes</h2><div class="grid" id="tracks"></div>
+<h2>SFX</h2><div class="grid" id="sfx"></div>
+<script type="module">
+  import { Emitter } from '/src/core/events.js';
+  import { createAudio, SFX_NAMES, TRACK_NAMES } from '/src/audio/audio.js';
+  const bus = new Emitter();
+  const save = { settings: { music: 0.7, sfx: 0.9 } };
+  const audio = createAudio({ bus, save });
+  window.__audio = { audio, bus };
+  const mk = (parent, label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = () => { audio.unlock(); fn(b); }; document.getElementById(parent).appendChild(b); return b; };
+  mk('tracks', '■ stop', () => bus.emit('music', { track: '' }));
+  for (const t of TRACK_NAMES) mk('tracks', t, () => bus.emit('music', { track: t }));
+  for (const s of SFX_NAMES) mk('sfx', s, () => bus.emit('sfx', { name: s }));
+  const mods = { invincible: false, boss: false, danger: false };
+  for (const k of Object.keys(mods)) mk('mods', k, (b) => { mods[k] = !mods[k]; b.classList.toggle('on', mods[k]); bus.emit('music:mod', { [k]: mods[k] }); });
+  let paused = false;
+  mk('mods', 'pause (rate 0)', (b) => { paused = !paused; b.classList.toggle('on', paused); bus.emit('music:mod', { rate: paused ? 0 : 1 }); });
+  document.getElementById('mv').oninput = (e) => audio.setVolumes({ music: +e.target.value });
+  document.getElementById('sv').oninput = (e) => audio.setVolumes({ sfx: +e.target.value });
+  setInterval(() => { document.getElementById('state').textContent = JSON.stringify(audio.state); }, 250);
+</script>
+</body>
+</html>

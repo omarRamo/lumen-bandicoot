@@ -61,7 +61,7 @@ boss_defeat, laser, fire, splash, spring, crumble, wind, rumble, honk, meow, qua
 
 ### Pistes musicales
 `title, map, beach, jungle, river, desert, medina, sidibou, ice, cave, aurora, factory, lab, space, tower, golden,
-boss, final_boss, chase, ride, victory, gameover, results`
+boss, final_boss, chase, ride, victory, gameover, results, ending`
 
 ## Contexte `ctx` passé aux entités
 ```js

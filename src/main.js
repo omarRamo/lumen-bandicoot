@@ -64,6 +64,7 @@ input.attach(window);
 // ---------------------------------------------------------------- systems
 const game = new Game(save);
 const audio = createAudio({ bus, save });
+audio.setListener?.(camera);
 const ui = createUI({
   root: document.getElementById('ui'), bus, input, save, worlds: WORLDS, levels: LEVELS, order: ORDER,
   isUnlocked: (id) => isUnlocked(id, save), goldSockCount: () => goldSockCount(save), audio, isTouch,
@@ -238,6 +239,7 @@ async function runLevel(id, timeTrial) {
 }
 
 async function showStory(id) {
+  if (id === 'ending' || id === 'secret_ending') bus.emit('music', { track: 'ending' });
   await ui.story(id);
   if (!save.seenStories.includes(id)) save.seenStories.push(id);
   writeSave(save);
