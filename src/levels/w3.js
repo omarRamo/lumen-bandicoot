@@ -65,11 +65,10 @@ export class TurtleBuilder extends LevelBuilder {
     }
     return this.ent('hazard', kind, lat, fwd, params.up ?? 0, p);
   }
-  /** Entity platform. Here `up` = height of its BOTTOM (as the contract says); entities get def.y = TOP surface
-   *  (what hazard-platforms.js implements), so `up: -h` gives a platform flush with the floor. */
+  /** Entity platform. `up` = height of its BOTTOM (contract: def.y = bottom), so `up: -h` is flush with the floor. */
   platform(kind, lat = 0, fwd = 0, params = {}) {
     const p = { w: 2, h: 0.5, d: 2, ...params };
-    p.up = r6((p.up ?? 0) + p.h);
+    p.up = r6(p.up ?? 0);
     if (p.to) {
       const [fx, fz] = this.F, [rx, rz] = this.R, tt = p.to;
       p.to = { x: r6(rx * (tt.lat ?? 0) + fx * (tt.fwd ?? 0)), y: tt.up ?? 0, z: r6(rz * (tt.lat ?? 0) + fz * (tt.fwd ?? 0)) };

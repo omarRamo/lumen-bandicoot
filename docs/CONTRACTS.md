@@ -161,7 +161,7 @@ Règle Crash : **la toupie éjecte l'ennemi VERS LA CAMÉRA** (il s'écrase sur 
 `barrels` (lanceur de tonneaux qui roulent vers le joueur, `interval`) · `wind` (`w,d,h, force:{x,z}`) ·
 `boulder` (le POURSUIVANT des niveaux `chase` : `style: 'moon'|'tajine'|'snowball'|'roomba'`, `speed`) — il suit l'axe -Z
 derrière le joueur, l'écrase au contact (cause `squash`), accélère si le joueur prend trop d'avance, s'arrête au portail.
-### `type: 'platform'` (agent Ennemis) — solides — ATTENTION : pour les plateformes, `y` = la surface du DESSUS
+### `type: 'platform'` (agent Ennemis) — solides — `y` = DESSOUS de la plateforme (boîte [y, y+h]) : `up: -h` = au ras du sol
 `moving` (`w,h,d`, `to:{x,y,z}` delta, `period`) · `falling` (tremble puis tombe, `delay`) · `sinking` (nénuphar qui coule) ·
 `bouncy` (champignon/nuage trampoline) · `rotating` (`w,d`, `speed` : tourne autour de Y, transporte) ·
 `vanishing` (`period, offset` : clignote/apparait).

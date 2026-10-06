@@ -86,7 +86,7 @@ export class Game {
     const p = this.player;
     if (!p || p.dead || p.celebrating) return;
     if (this.invincible && !['fall', 'water', 'squash'].includes(cause)) return;
-    if (p.hurtT > 0 && !['fall', 'water'].includes(cause)) return;
+    if (p.hurtT > 0 && !['fall', 'water', 'squash'].includes(cause)) return;
     this.level?.playerDied(cause);
   }
 
