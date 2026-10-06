@@ -1,0 +1,10 @@
+{
+  "name": "Lumen Bandicoot",
+  "short_name": "Lumen B.",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#1c1640",
+  "theme_color": "#1c1640",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
