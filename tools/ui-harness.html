@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Lumen Bandicoot — UI harness</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; touch-action: none; background: linear-gradient(#7fd4ff, #bfeee0 55%, #e9cf91 56%, #d9b46a); }
+    #ui { position: fixed; inset: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="ui"></div>
+  <script type="module">
+    // UI harness (dev only): boots createUI with the real bus/input/save so tools/ui-tour.mjs can open any screen.
+    import { bus } from '/src/core/events.js';
+    import { input } from '/src/core/input.js';
+    import { loadSave, writeSave } from '/src/game/save.js';
+    import { Game } from '/src/game/game.js';
+    import { LEVELS, WORLDS, ORDER, isUnlocked, goldSockCount } from '/src/levels/index.js';
+    import { createUI } from '/src/ui/ui.js';
+    input.attach(window);
+    const save = loadSave();
+    const game = new Game(save);
+    const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+    const sfxLog = [];
+    bus.on('sfx', (p) => sfxLog.push(p.name));
+    const ui = createUI({ root: document.getElementById('ui'), bus, input, save, worlds: WORLDS, levels: LEVELS, order: ORDER,
+      isUnlocked: (id) => isUnlocked(id, save), goldSockCount: () => goldSockCount(save), audio: {}, isTouch,
+      onSettingsChange: () => writeSave(save), game });
+    (function loop() { requestAnimationFrame(loop); input.update(); })();
+    window.H = { ui, bus, save, game, input, LEVELS, ORDER, sfxLog, ready: true };
+  </script>
+</body>
+</html>

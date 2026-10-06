@@ -167,6 +167,8 @@ function stopLevel() {
   ui.touch.setVisible(false);
 }
 
+const nextFrame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
 function playLevel(id, timeTrial) {
   return new Promise((resolve) => {
     const offs = [];
@@ -174,7 +176,12 @@ function playLevel(id, timeTrial) {
     offs.push(bus.on('level:complete', (stats) => done({ type: 'complete', stats })));
     offs.push(bus.on('level:gameover', () => done({ type: 'gameover' })));
     levelSignal = (r) => done(r);
-    try { startLevel(id, timeTrial); } catch (err) { console.error(err); done({ type: 'error', err }); }
+    // building a level takes a moment on phones: show the loading card first, let it paint, then build
+    ui.loading(true, LEVELS[id]?.name?.[save.lang] || id);
+    nextFrame().then(() => {
+      try { startLevel(id, timeTrial); } catch (err) { console.error(err); done({ type: 'error', err }); }
+      ui.loading(false);
+    });
   });
 }
 
@@ -239,7 +246,8 @@ async function runLevel(id, timeTrial) {
 }
 
 async function showStory(id) {
-  if (id === 'ending' || id === 'secret_ending') bus.emit('music', { track: 'ending' });
+  const STORY_MUSIC = { intro: 'title', island2: 'desert', island3: 'ice', island4: 'factory', ending: 'ending', secret: 'golden', secret_ending: 'ending' };
+  if (STORY_MUSIC[id]) bus.emit('music', { track: STORY_MUSIC[id] });
   await ui.story(id);
   if (!save.seenStories.includes(id)) save.seenStories.push(id);
   writeSave(save);
@@ -266,7 +274,7 @@ async function main() {
 // ---------------------------------------------------------------- debug / QA hooks
 window.__LB = {
   get level() { return level; }, get player() { return level?.player; }, game, save, LEVELS, ORDER, bus, input, rig,
-  get fps() { return fps; },
+  get fps() { return fps; }, ui,
   play(id, tt = false) { levelSignal?.({ type: 'quit' }); setTimeout(() => runLevel(id, tt), 50); },
   setPower(p) { if (!save.powers.includes(p)) save.powers.push(p); },
   teleport(x, y, z) { level?.player.pos.set(x, y, z); },
