@@ -94,7 +94,7 @@ export function createHUD(env) {
     if (timerEl.hidden && active) timerEl.hidden = false;
   });
   bus.on('toast', (p) => { if (p) toast(p.text, p.kind || 'info', p.duration); });
-  bus.on('dialog', (p) => { if (p) dialog(p.speaker, p.text); });
+  bus.on('dialog', (p) => { if (p) dialog(p.speaker, p.text, p.name); });
   bus.on('power:unlock', (p) => {
     if (!active || !p) return;
     const pw = POWERS[p.power];
@@ -133,19 +133,19 @@ export function createHUD(env) {
   }
 
   // ---------------------------------------------------------------- dialog bubbles
-  function dialog(speaker, text) {
+  function dialog(speaker, text, name) {
     const str = tr(text, L());
     if (!str) return;
-    dialogQueue.push({ speaker: speaker || 'oku', text: str });
-    if (dialogQueue.length > 2) dialogQueue.shift();
+    dialogQueue.push({ speaker: speaker || 'oku', text: str, name });
+    if (dialogQueue.length > 4) dialogQueue.shift();
     if (!dialogCur) nextDialog();
   }
   function nextDialog() {
     const d = dialogQueue.shift();
     if (!d) { dialogCur = null; return; }
-    const icon = { oku: 'oku', cortisol: 'cortisol', zina: 'zina', lumen: 'lumen' }[d.speaker] || 'oku';
+    const icon = { oku: 'oku', cortisol: 'cortisol', zina: 'zina', lumen: 'lumen', crab: 'emoji:🦀', djinn: 'emoji:🧞', yeti: 'emoji:🦍' }[d.speaker] || 'oku';
     const b = h('div', `lb-dialog lb-dialog-${d.speaker}`, dialogLayer);
-    b.innerHTML = `<span class="lb-dialog-face"><img alt="" src="${iconURL(icon, 128)}" /></span><span class="lb-dialog-bubble"><b>${esc(tr(SPEAKERS[d.speaker] || d.speaker, L()))}</b><span>${esc(d.text)}</span></span>`;
+    b.innerHTML = `<span class="lb-dialog-face"><img alt="" src="${iconURL(icon, 128)}" /></span><span class="lb-dialog-bubble"><b>${esc(tr(SPEAKERS[d.speaker] || d.name || d.speaker, L()))}</b><span>${esc(d.text)}</span></span>`;
     dialogCur = { el: b, life: clamp(2.2 + d.text.length * 0.045, 2.6, 6.5) };
   }
 

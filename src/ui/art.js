@@ -503,6 +503,12 @@ export function iconURL(name, size = 128) {
       case 'sock': g.translate(m, m + size * 0.02); drawSock(g, size * 0.9, arg || 'red'); break;
       case 'spoon': g.translate(m, m + size * 0.04); drawSpoon(g, size * 0.85, arg || 'gold'); break;
       case 'lock': g.translate(m, m); drawLock(g, size * 0.8); break;
+      case 'emoji': {
+        g.fillStyle = '#fff7dc'; g.beginPath(); g.arc(m, m, m * 0.96, 0, Math.PI * 2); g.fill();
+        g.font = `${Math.round(size * 0.62)}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+        g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(name.slice(6), m, m * 1.06);
+        break;
+      }
       default: break;
     }
     url = c.toDataURL('image/png');
