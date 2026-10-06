@@ -281,4 +281,5 @@ interne à l'UI) ET à la souris/tactile. Langue : `save.lang` ('fr' par défaut
 - `node tests/browser/smoke.mjs [ids…]` : lance chaque niveau dans Chromium headless, échoue sur toute erreur console,
   screenshots dans `test-results/level-<id>.png` (REGARDE-LES avec l'outil Read pour vérifier visuellement).
 - `node tools/trace.mjs <id> [out.png]` : trace position joueur/caméra en courant tout droit.
+- Niveaux de test : chaque équipe peut créer `src/levels/sandbox/<equipe>.js` (export default [données…], ids `T-<equipe>-…`), ils sont chargés automatiquement (`?debug&level=T-crates-1`).
 - `npm test` : tests Node (`tests/*.test.js`).

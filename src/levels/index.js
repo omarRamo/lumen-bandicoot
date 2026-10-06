@@ -26,6 +26,9 @@ export const LEVELS = {};
 for (const l of [...w1, ...w2, ...w3, ...w4, ...secret, ...bosses]) {
   if (l && l.id) LEVELS[l.id] = l;
 }
+// Test levels (ids 'T-…'): each team may add src/levels/sandbox/<team>.js exporting an array. Not in the story ORDER.
+const sandbox = import.meta.glob('./sandbox/*.js', { eager: true });
+for (const mod of Object.values(sandbox)) for (const l of mod.default || []) if (l && l.id) LEVELS[l.id] = l;
 
 /** Golden socks needed to open the secret world. */
 export const SECRET_SOCKS_NEEDED = 12;
