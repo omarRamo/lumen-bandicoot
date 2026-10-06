@@ -15,7 +15,12 @@ const T = {
   slideTime: 0.5, slideSpeed: 12, slideJumpSpeed: 10.5,
   slamVy: -28, slamHop: 5,
   bounceVy: 12.5,
+  rideSteer: 8,
 };
+
+function approach(v, target, step) {
+  return v < target ? Math.min(target, v + step) : Math.max(target, v - step);
+}
 
 const STAND_H = 0.56, SLIDE_H = 0.3;
 
@@ -219,7 +224,19 @@ export class Player {
     }
 
     // ---- horizontal velocity
-    if (!this.sliding && !this.slamming) {
+    if (this.autoRun && !this.slamming) {
+      // ride / auto-run: forward speed is imposed along the camera's travel axis, the stick only steers sideways
+      const f = rig ? rig.forward : { x: 0, z: -1 };
+      const r = rig ? rig.right : { x: 1, z: 0 };
+      const along = this.vel.x * f.x + this.vel.z * f.z;
+      const lat = this.vel.x * r.x + this.vel.z * r.z;
+      const nAlong = approach(along, this.autoRun, (along < this.autoRun ? 24 : 10) * dt);
+      const nLat = approach(lat, input.move.x * T.rideSteer, (this.grounded ? 40 : 22) * dt);
+      this.vel.x = f.x * nAlong + r.x * nLat;
+      this.vel.z = f.z * nAlong + r.z * nLat;
+      const steer = nLat / Math.max(1, nAlong) * 0.8;
+      this.facing = Math.atan2(f.x + r.x * steer, f.z + r.z * steer);
+    } else if (!this.sliding && !this.slamming) {
       const tx = wish.x * maxSpeed, tz = wish.z * maxSpeed;
       let a;
       if (!this.grounded) a = T.airAccel;
@@ -233,15 +250,6 @@ export class Player {
         let d = target - this.facing; d = Math.atan2(Math.sin(d), Math.cos(d));
         this.facing += d * Math.min(1, dt * (this.grounded ? 16 : 9));
       }
-    }
-    if (this.autoRun) {
-      // forward speed forced along the level direction
-      const f = rig ? rig.forward : { x: 0, z: -1 };
-      const along = this.vel.x * f.x + this.vel.z * f.z;
-      const add = (this.autoRun - along) * Math.min(1, dt * 4);
-      this.vel.x += f.x * add; this.vel.z += f.z * add;
-      const r = rig ? rig.right : { x: 1, z: 0 };
-      this.facing = Math.atan2(f.x + r.x * input.move.x * 0.35, f.z + r.z * input.move.x * 0.35);
     }
 
     // ---- jump
