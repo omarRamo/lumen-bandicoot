@@ -315,6 +315,7 @@ export class Player {
       this.vel.y = 0;
       res.ceiling.__owner?.onBump?.(this, ctx);
     }
+    if (res.wall) res.wall.__owner?.onWall?.(this, ctx);
     if (res.wall && this.sliding) {
       res.wall.__owner?.onSpin?.(this, ctx);
     }

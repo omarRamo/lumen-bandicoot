@@ -101,6 +101,7 @@ Objet entité retourné (tous champs optionnels sauf `object3d`) :
   counts: false,            // true → compte dans le total de caisses (le niveau lit ce flag à la création)
   update(dt, ctx),
   onLand(player, ctx),      // le joueur ATTERRIT dessus (solide uniquement) → ex: casser la caisse et rebondir
+  onWall(player, ctx),      // le joueur pousse contre ce solide de côté (chaque frame de contact)
   onBump(player, ctx),      // le joueur la cogne par DESSOUS de la tête (solide)
   onTouch(player, ctx, info),// chevauchement AABB (non solide) ; info = { fromAbove: bool } (le joueur tombait et ses pieds étaient au-dessus du milieu)
   onSpin(player, ctx),      // touché par la toupie (une fois par toupie) ; aussi appelé par la glissade (player.sliding)

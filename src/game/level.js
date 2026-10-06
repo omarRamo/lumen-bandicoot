@@ -139,7 +139,9 @@ export class Level {
     this.stats.crates++;
     bus.emit('hud:crates', { broken: this.stats.crates, total: this.stats.cratesTotal });
     if (this.stats.crates === this.stats.cratesTotal && this.stats.cratesTotal > 0) {
-      bus.emit('toast', { text: { fr: 'Toutes les caisses ! Chaussette dorée en vue…', en: 'All crates! Golden sock incoming…' }, kind: 'big' });
+      bus.emit('toast', { text: { fr: 'Toutes les caisses ! Chaussette dorée !', en: 'All crates! Golden sock!' }, kind: 'big' });
+      const p = this.player.pos;
+      this.spawn({ type: 'pickup', kind: 'goldSock', x: p.x, y: p.y + 1.6, z: p.z, keep: true });
     }
   }
 

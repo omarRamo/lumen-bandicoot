@@ -51,16 +51,20 @@ export class FX {
 
   text(pos, str, color = '#fff7dc', opts = {}) {
     const c = document.createElement('canvas');
-    c.width = 256; c.height = 96;
-    const g = c.getContext('2d');
-    g.font = `900 ${opts.px ?? 58}px "Baloo 2", "Trebuchet MS", system-ui, sans-serif`;
+    const font = `900 ${opts.px ?? 58}px "Baloo 2", "Trebuchet MS", system-ui, sans-serif`;
+    let g = c.getContext('2d');
+    g.font = font;
+    const w = Math.max(256, Math.ceil(g.measureText(str).width + 40));
+    c.width = w; c.height = 96;
+    g = c.getContext('2d');
+    g.font = font;
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.lineWidth = 10; g.strokeStyle = '#1c1640'; g.strokeText(str, 128, 50);
-    g.fillStyle = color; g.fillText(str, 128, 50);
+    g.lineWidth = 10; g.strokeStyle = '#1c1640'; g.lineJoin = 'round'; g.strokeText(str, w / 2, 50);
+    g.fillStyle = color; g.fillText(str, w / 2, 50);
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, toneMapped: false }));
-    sp.scale.set(2.2 * (opts.scale ?? 1), 0.82 * (opts.scale ?? 1), 1);
+    sp.scale.set(2.2 * (w / 256) * (opts.scale ?? 1), 0.82 * (opts.scale ?? 1), 1);
     sp.position.set(pos.x, pos.y + 1.4, pos.z);
     sp.renderOrder = 10;
     this.scene.add(sp);
