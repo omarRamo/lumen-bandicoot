@@ -355,6 +355,7 @@ export class Player {
       this.airT += dt;
     }
 
+    if (Number.isFinite(level.data.waterY) && this.pos.y < level.data.waterY - 0.45 && !this.dead) game.kill('water');
     if (this.pos.y < (level.data.killY ?? -15) && !this.dead) game.kill('fall');
   }
 

@@ -58,7 +58,7 @@ export class Level {
     };
 
     // environment (sky, lights, platforms art, decor)
-    this.env = createEnvironment(this.scene, data, { quality: shared.quality, renderer: shared.renderer, camera: shared.camera });
+    this.env = createEnvironment(this.scene, data, { quality: shared.quality, renderer: shared.renderer, camera: shared.camera, lang: shared.lang });
 
     // static platforms
     for (const p of data.platforms) {

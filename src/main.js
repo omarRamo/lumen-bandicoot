@@ -277,7 +277,7 @@ window.__LB = {
   get fps() { return fps; }, ui,
   play(id, tt = false) { levelSignal?.({ type: 'quit' }); setTimeout(() => runLevel(id, tt), 50); },
   setPower(p) { if (!save.powers.includes(p)) save.powers.push(p); },
-  teleport(x, y, z) { level?.player.pos.set(x, y, z); },
+  teleport(x, y, z) { if (!level) return; level.player.pos.set(x, y, z); level.updateZones(); rig.snap(level.player); },
   completeLevel() { level?.complete(); },
   unlockAll() { for (const id of ORDER) save.levels[id] = { ...(save.levels[id] || {}), done: true }; writeSave(save); },
   worldOf,
