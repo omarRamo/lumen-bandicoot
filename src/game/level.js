@@ -294,7 +294,7 @@ export class Level {
 
     // entities
     const px = p.pos.x, pz = p.pos.z;
-    const spinBox = (p.spinning || p.sliding || (p.mount && !p.dead)) ? p.getSpinBox() : null;
+    const spinBox = (p.spinning || p.sliding) ? p.getSpinBox() : (p.mount && !p.dead) ? p.getRamBox() : null;
     const hitId = p.sliding ? `s${p.slideId ?? 0}` : p.spinId;
     for (let i = 0; i < this.entities.length; i++) {
       const e = this.entities[i];

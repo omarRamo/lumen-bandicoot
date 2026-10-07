@@ -15,7 +15,7 @@ const T = {
   slideTime: 0.5, slideSpeed: 12, slideJumpSpeed: 10.5,
   slamVy: -28, slamHop: 5,
   bounceVy: 12.5,
-  rideSteer: 8,
+  rideSteer: 9.5,
 };
 
 function approach(v, target, step) {
@@ -400,6 +400,15 @@ export class Player {
       this.shadow.scale.setScalar(s);
       this.shadow.material.opacity = 0.42 * s;
     } else this.shadow.visible = false;
+  }
+
+  /** AABB used when riding: the mount rams what is right in front of / against it (not a wide spin radius). */
+  getRamBox() {
+    const b = this.spinBox, r = 0.45;
+    b.min.x = this.pos.x - r; b.max.x = this.pos.x + r;
+    b.min.z = this.pos.z - r; b.max.z = this.pos.z + r;
+    b.min.y = this.pos.y; b.max.y = this.pos.y + 1.1;
+    return b;
   }
 
   /** AABB used for spin hits (bigger, around Lumen). */
