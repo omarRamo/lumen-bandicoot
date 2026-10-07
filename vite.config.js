@@ -5,6 +5,7 @@ export default defineConfig({
   build: {
     target: ['es2022', 'safari15', 'chrome90'],
     chunkSizeWarningLimit: 900,
+    rollupOptions: { output: { manualChunks: (id) => (id.includes('node_modules/three') ? 'three' : undefined) } },
   },
   server: { host: true },
   // pre-bundle up front so headless tests are never interrupted by a late dependency reload
